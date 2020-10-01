@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     Animator _animator;                 // アニメーション切り替え用変数
     String[] _animFlagName;             // アニメーションフラグの名前
     int _animNum;                       // アニメーションの種類
-    public GameObject _start;
+    public GameObject _start;           // 開始地点
 
     /// <summary>
     /// 左右移動用変数
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
             "_idle","_run","_jump","_dead"
         };
         _animNum = _animFlagName.Length;
-        transform.position = _start.transform.position;
+        //transform.position = _start.transform.position;
     }
 
     void Update()

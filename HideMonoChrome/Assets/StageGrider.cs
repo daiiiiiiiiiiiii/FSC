@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -26,47 +27,68 @@ public class Array
 // マップ情報の管理など
 public class StageGrider : MonoBehaviour
 {
-    public Vector2Int _cellnum;
+    public Vector2Int _cellnum;         // 升目の数
     float _size = 1;
-    private Array _array;
-    private bool[,] _blocks;
-    [SerializeField]
-    private Sprite _black;
-    [SerializeField]
-    private Sprite _white;
+    float _offset = 0.5f;
+    private Array _array;               // ステージの縦横サイズ
+    private bool[,] _blockType;         // ブロックの種類
+    private GameObject _blocks;         // 全ブロックの親オブジェクト
+    private GameObject _black;          // 黒ブロック
+    private GameObject _white;          // 白ブロック
+    private EdgeCollider2D _outLine;    // 外枠
+    private Vector2[] _points;          // エッジコライダーの始終点
+    private GameObject _player;         // プレイヤーの情報
+
+    // キー関連
+    private bool _isDecision;           // 決定を押したか
 
     void Start()
     {
         _array = new Array(_cellnum);
-        _blocks = new bool[_cellnum.x, _cellnum.y];
+        _black = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/block_b.prefab");
+        _white = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/block_w.prefab");
+        _blocks = new GameObject("_blocks");
+        _blocks.transform.parent = transform;
+        _blockType = new bool[_cellnum.x, _cellnum.y];
+       
+        _outLine = gameObject.transform.GetComponentInChildren<EdgeCollider2D>();
+        _points = _outLine.points;
+        _player = GameObject.Find("player");
+        gameObject.AddComponent<SortingGroup>().sortingLayerName = "object";
+        InitBlocks();
+        SetImage();
+    }
 
+    // 初期のブロック配置を決定
+    private void InitBlocks()
+    {
         for (int p = 0; p < _cellnum.x; p++)
         {
             for (int i = 0; i < _cellnum.y; i++)
             {
                 var r = (int)UnityEngine.Random.Range(0, 100f) % 2;
-                _blocks[p,i] = r == 0 ? true : false;
+                _blockType[p, i] = r == 0 ? true : false;
             }
         }
-        SetImage();
     }
 
     void SetImage()
-    {
+    {      
+        // 子オブジェクトの登録
         for (int p = 0; p < _cellnum.x; p++)
         {
             for (int i = 0; i < _cellnum.y; i++)
             {
-                var s = gameObject.AddComponent<SpriteRenderer>();
-                if (_blocks[i, p])
+                Vector3 pos = new Vector3(p * _size + _offset, i * _size + _offset);
+                if (_blockType[p,i])
                 {
-                    s.sprite = _black;
-                    gameObject.AddComponent<SortingGroup>().sortingLayerName = "object";
+                    GameObject obj = (GameObject)Instantiate(_black, pos, Quaternion.identity);
+                    obj.transform.parent = _blocks.transform;
                 }
                 else
                 {
-                    s.sprite = _white;
-                    gameObject.AddComponent<SortingGroup>().sortingLayerName = "object";
+                    GameObject obj = (GameObject)Instantiate(_white, pos, Quaternion.identity);
+                    obj.transform.parent = _blocks.transform;
                 }
             }
         }
@@ -74,7 +96,43 @@ public class StageGrider : MonoBehaviour
 
     private void Update()
     {
+        KeyInputAction();
         DrawGridLine();
+        if (_isDecision)
+        {
+            SetBlocks();
+        }
+    }
+
+    private void SetBlocks()
+    {
+        var tmp = _blockType;
+        Destroy(_blocks);
+        _blocks = new GameObject("_blocks");
+        _blocks.transform.parent = transform;
+        var pos = GetCurrentPlayerPos();
+        for (int p = 0; p < _cellnum.x; p++)
+        {
+            for (int i = 0; i < _cellnum.y; i++)
+            {
+                if (p != pos.x || i != pos.y)
+                {
+                    _blockType[p, i] = !tmp[p,i];
+                }
+            }
+        }
+        SetImage();
+    }
+
+    private void KeyInputAction()
+    {
+        _isDecision = Input.GetButtonDown("Decision");
+    }
+
+    private Vector2Int GetCurrentPlayerPos()
+    {
+        Vector2Int pos = new Vector2Int((int)_player.transform.position.x, (int)_player.transform.position.y);
+        return pos;
     }
 
     void DrawGridLine()
