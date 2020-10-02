@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 
 public class Array
@@ -33,10 +31,10 @@ public class StageGrider : MonoBehaviour
     private Array _array;               // ステージの縦横サイズ
     private bool[,] _blockType;         // ブロックの種類
     private GameObject _blocks;         // 全ブロックの親オブジェクト
+    [SerializeField]
     private GameObject _black;          // 黒ブロック
+    [SerializeField]
     private GameObject _white;          // 白ブロック
-    private EdgeCollider2D _outLine;    // 外枠
-    private Vector2[] _points;          // エッジコライダーの始終点
     private GameObject _player;         // プレイヤーの情報
 
     // キー関連
@@ -45,14 +43,10 @@ public class StageGrider : MonoBehaviour
     void Start()
     {
         _array = new Array(_cellnum);
-        _black = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/block_b.prefab");
-        _white = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/block_w.prefab");
         _blocks = new GameObject("_blocks");
         _blocks.transform.parent = transform;
         _blockType = new bool[_cellnum.x, _cellnum.y];
        
-        _outLine = gameObject.transform.GetComponentInChildren<EdgeCollider2D>();
-        _points = _outLine.points;
         _player = GameObject.Find("player");
         gameObject.AddComponent<SortingGroup>().sortingLayerName = "object";
         InitBlocks();
@@ -70,6 +64,7 @@ public class StageGrider : MonoBehaviour
                 _blockType[p, i] = r == 0 ? true : false;
             }
         }
+        _blockType[0, 0] = true;
     }
 
     void SetImage()

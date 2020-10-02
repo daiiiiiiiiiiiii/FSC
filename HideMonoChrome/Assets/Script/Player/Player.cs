@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
             "_idle","_run","_jump","_dead"
         };
         _animNum = _animFlagName.Length;
-        //transform.position = _start.transform.position;
+        transform.position = new Vector2(0.5f, 0.5f);
     }
 
     void Update()

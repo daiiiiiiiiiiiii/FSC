@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
-using UnityEngine;
+﻿using UnityEngine;
 
 // プレイヤーに追跡するカメラ
 public class TrackingCamera : MonoBehaviour
