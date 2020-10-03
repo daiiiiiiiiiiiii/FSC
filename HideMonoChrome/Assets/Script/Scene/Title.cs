@@ -15,6 +15,7 @@ public class Title : MonoBehaviour
             _fade.FadeIn(1f, () =>
             {
                 SceneManager.LoadScene("Menu");
+                _fade.FadeOut(1);
             });
         }       
     }

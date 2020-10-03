@@ -277,7 +277,11 @@ PrefabInstance:
     - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: maskTexture
       value: 
-      objectReference: {fileID: 2800000, guid: 2c1dfd8b7c5b7ba4a881682d4a621eb0, type: 3}
+      objectReference: {fileID: 2800000, guid: e231e370e21ddf64e9221491890be703, type: 3}
+    - target: {fileID: 11491604, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
+      propertyPath: _sceneStart
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 22424616, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -421,7 +425,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f59a4395c5287a844b3a7b96fda3d235, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

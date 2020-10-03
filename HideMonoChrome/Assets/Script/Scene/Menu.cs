@@ -6,17 +6,18 @@ public class Menu : MonoBehaviour
     public Fade _fade;
     void Start()
     {
-        
+       // _fade.FadeOut(1f);
     }
 
     void Update()
     {
         if (Input.anyKey)
         {
-            _fade.FadeOut(1f, () =>
+            _fade.FadeIn(1f, () =>
             {
-                //SceneManager.LoadScene("Menu");
+                SceneManager.LoadScene("Stage1");
             });
+           
         }
     }
 }

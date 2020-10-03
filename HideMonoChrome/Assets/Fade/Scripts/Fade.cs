@@ -27,10 +27,15 @@ using UnityEngine.Assertions;
 public class Fade : MonoBehaviour
 {
 	IFade fade;
+	public bool _sceneStart = false;
 
 	void Start ()
 	{
 		Init ();
+		if (_sceneStart)
+		{
+			cutoutRange = 1f;
+		}
 		fade.Range = cutoutRange;
 	}
 
