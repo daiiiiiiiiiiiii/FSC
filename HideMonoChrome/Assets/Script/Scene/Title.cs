@@ -10,12 +10,12 @@ public class Title : MonoBehaviour
 
     void Update()
     {
-        if (Input.anyKey)
+        if (Input.GetButtonDown("Start"))
         {
-            _fade.FadeIn(1f, () =>
+            _fade.FadeIn(2f, () =>
             {
-                SceneManager.LoadScene("Menu");
-                _fade.FadeOut(1);
+                SceneManager.LoadScene("Stage1");
+                _fade.FadeOut(3f);
             });
         }       
     }
