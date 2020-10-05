@@ -1,6 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
+enum State
+{
+    Idle,
+    Run,
+    Jump,
+    Dead,
+    Max
+}
+
 public class Player : MonoBehaviour
 {
     private State _state;               // 現在の状態
@@ -119,15 +128,10 @@ public class Player : MonoBehaviour
     // 着地判定
     void OnTriggerEnter2D(Collider2D col)
     {
-        //_rb.position = col.gameObject.GetComponent<IHitObject>().SetPosition(_rb);
         _isGround = true;
     }
     void OnTriggerStay2D(Collider2D col)
     {
-        if (col.gameObject.transform.parent.name == "LR")
-        {
-            _rb.position = col.gameObject.GetComponent<IHitObject>().SetPosition(_rb);
-        }
         _isGround = true;
     }
     // 空中判定

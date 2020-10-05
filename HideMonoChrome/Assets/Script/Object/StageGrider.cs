@@ -29,13 +29,16 @@ public class StageGrider : MonoBehaviour
     float _size = 1;
     float _offset = 0.5f;
     private Array _array;               // ステージの縦横サイズ
-    private bool[,] _blockType;         // ブロックの種類
+    private int[,] _blockType;         // ブロックの種類
     private GameObject _blocks;         // 全ブロックの親オブジェクト
     [SerializeField]
     private GameObject _black;          // 黒ブロック
     [SerializeField]
     private GameObject _white;          // 白ブロック
+
     private GameObject _player;         // プレイヤーの情報
+    private GameObject _enemyParent;    // 敵キャラクターの親オブジェクト
+    public Vector3 _keyPos{ get; set; } // キーの初期座標
 
     // キー関連
     private bool _isDecision;           // 決定を押したか
@@ -45,8 +48,9 @@ public class StageGrider : MonoBehaviour
         _array = new Array(_cellnum);
         _blocks = new GameObject("_blocks");
         _blocks.transform.parent = transform;
-        _blockType = new bool[_cellnum.x, _cellnum.y];
-       
+        _blockType = new int[_cellnum.x, _cellnum.y];
+
+        _enemyParent = GameObject.Find("Enemy");
         _player = GameObject.Find("player");
         gameObject.AddComponent<SortingGroup>().sortingLayerName = "object";
         InitBlocks();
@@ -60,11 +64,16 @@ public class StageGrider : MonoBehaviour
         {
             for (int i = 0; i < _cellnum.y; i++)
             {
-                var r = (int)UnityEngine.Random.Range(0, 100f) % 2;
-                _blockType[p, i] = r == 0 ? true : false;
+                var r = (int)Random.Range(0, 100f) % 2;
+                _blockType[p, i] = r;
             }
         }
-        _blockType[0, 0] = true;
+        var x = (int)Random.Range(1, _cellnum.x);
+        var y = (int)Random.Range(1, _cellnum.y);
+        _keyPos = new Vector3(x + _offset, y + _offset);
+        _enemyParent.transform.GetChild(0).transform.position = _keyPos;
+        _blockType[x,y] = 1;
+        _blockType[0, 0] = 1;
     }
 
     void SetImage()
@@ -75,14 +84,14 @@ public class StageGrider : MonoBehaviour
             for (int i = 0; i < _cellnum.y; i++)
             {
                 Vector3 pos = new Vector3(p * _size + _offset, i * _size + _offset);
-                if (_blockType[p,i])
+                if (_blockType[p,i] == 0)
                 {
-                    GameObject obj = (GameObject)Instantiate(_black, pos, Quaternion.identity);
-                    obj.transform.parent = _blocks.transform;
+                    GameObject obj = (GameObject)Instantiate(_white, pos, Quaternion.identity);
+                    obj.transform.parent = _blocks.transform;              
                 }
                 else
                 {
-                    GameObject obj = (GameObject)Instantiate(_white, pos, Quaternion.identity);
+                    GameObject obj = (GameObject)Instantiate(_black, pos, Quaternion.identity);
                     obj.transform.parent = _blocks.transform;
                 }
             }
@@ -105,14 +114,16 @@ public class StageGrider : MonoBehaviour
         Destroy(_blocks);
         _blocks = new GameObject("_blocks");
         _blocks.transform.parent = transform;
-        var pos = GetCurrentPlayerPos();
+        var pos = GetCurrentCharaPos(_player);
+        var key = GetCurrentCharaPos(_enemyParent.transform.GetChild(0).gameObject);
         for (int p = 0; p < _cellnum.x; p++)
         {
             for (int i = 0; i < _cellnum.y; i++)
             {
-                if (p != pos.x || i != pos.y)
+                if (!((p == pos.x && i == pos.y)
+                 || (p == key.x && i == key.y)))
                 {
-                    _blockType[p, i] = !tmp[p,i];
+                    _blockType[p, i] = (tmp[p,i] - 1) * -1;
                 }
             }
         }
@@ -124,9 +135,9 @@ public class StageGrider : MonoBehaviour
         _isDecision = Input.GetButtonDown("Decision");
     }
 
-    private Vector2Int GetCurrentPlayerPos()
+    private Vector2Int GetCurrentCharaPos(GameObject chara)
     {
-        Vector2Int pos = new Vector2Int((int)_player.transform.position.x, (int)_player.transform.position.y);
+        Vector2Int pos = new Vector2Int((int)chara.transform.position.x, (int)chara.transform.position.y);
         return pos;
     }
 
@@ -144,5 +155,19 @@ public class StageGrider : MonoBehaviour
             var p = x * _size;
             Debug.DrawLine(new Vector3(p,0), new Vector3(p,_cellnum.y * _size));
         }
+    }
+
+    public bool GetBlock(Vector3 pos)
+    {
+        if(pos.x >= _cellnum.x || pos.x < 0 ||
+           pos.y >= _cellnum.y || pos.y < 0)
+        {
+            return false;
+        }
+        if(_blockType[(int)pos.x,(int)pos.y] == 0)
+        {
+            return false;
+        }
+        return true;
     }
 }
