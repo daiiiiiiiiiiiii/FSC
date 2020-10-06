@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public enum Dir
+﻿public enum MoveType
 {
     Right,
     Left,
@@ -13,14 +11,12 @@ public enum Dir
 enum EnemyType
 {
     Key,
-    Pac,
+    Pac_W,
+    Pac_B,
     Max
 }
 
-// 敵キャラの基底クラス
-// 速度、向きなど最低限必要な情報を持っている
 interface IEnemy
 {
-    void Move();
-    bool IsHitObject(Vector3 pos);
+    EnemyType GetEnemyType();
 }

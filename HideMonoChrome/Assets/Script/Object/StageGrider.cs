@@ -156,18 +156,4 @@ public class StageGrider : MonoBehaviour
             Debug.DrawLine(new Vector3(p,0), new Vector3(p,_cellnum.y * _size));
         }
     }
-
-    public bool GetBlock(Vector3 pos)
-    {
-        if(pos.x >= _cellnum.x || pos.x < 0 ||
-           pos.y >= _cellnum.y || pos.y < 0)
-        {
-            return false;
-        }
-        if(_blockType[(int)pos.x,(int)pos.y] == 0)
-        {
-            return false;
-        }
-        return true;
-    }
 }
