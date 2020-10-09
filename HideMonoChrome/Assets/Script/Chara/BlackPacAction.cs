@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-class KeyAction : MonoBehaviour, IEnemy
+class BlackPacAction : MonoBehaviour
 {
     MoveType _dir;
     Vector2[] _speed;
@@ -79,6 +79,6 @@ class KeyAction : MonoBehaviour, IEnemy
     }
     public EnemyType GetEnemyType()
     {
-        return EnemyType.Key;
+        return EnemyType.Pac_B;
     }
 }
