@@ -25,8 +25,8 @@ public class Array
 // マップ情報の管理など
 public class StageGrider : MonoBehaviour
 {
-    public Vector2Int _cellnum;         // 升目の数
-    float _size = 1;
+    [SerializeField]
+    private Vector2Int _cellnum;         // 升目の数
     float _offset = 0.5f;
     private Array _array;               // ステージの縦横サイズ
     private int[,] _blockType;         // ブロックの種類
@@ -83,7 +83,7 @@ public class StageGrider : MonoBehaviour
         {
             for (int i = 0; i < _cellnum.y; i++)
             {
-                Vector3 pos = new Vector3(p * _size + _offset, i * _size + _offset);
+                Vector3 pos = new Vector3(p + _offset, i + _offset);
                 if (_blockType[p,i] == 0)
                 {
                     GameObject obj = (GameObject)Instantiate(_white, pos, Quaternion.identity);
@@ -146,14 +146,12 @@ public class StageGrider : MonoBehaviour
         // 横のライン
         for(int y = 0;y <= _array.y; y++)
         {
-            var p = y * _size;
-            Debug.DrawLine(new Vector3(0, p), new Vector3(_cellnum.x * _size, p));
+            Debug.DrawLine(new Vector3(0, y), new Vector3(_cellnum.x, y));
         }
         // 縦のライン
         for (int x = 0; x <= _array.x; x++)
         {
-            var p = x * _size;
-            Debug.DrawLine(new Vector3(p,0), new Vector3(p,_cellnum.y * _size));
+            Debug.DrawLine(new Vector3(x,0), new Vector3(x,_cellnum.y));
         }
     }
 }
