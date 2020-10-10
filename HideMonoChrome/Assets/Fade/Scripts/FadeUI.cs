@@ -61,5 +61,4 @@ public class FadeUI : UnityEngine.UI.Graphic, IFade
 		UpdateMaskTexture(maskTexture);
 	}
 #endif
-
 }

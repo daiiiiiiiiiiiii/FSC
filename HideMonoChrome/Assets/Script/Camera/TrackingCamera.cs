@@ -30,7 +30,6 @@ public class TrackingCamera : MonoBehaviour
         var max = _outLine.points[2];
         pos.x = Mathf.Clamp(pos.x, min.x + _width.x, max.x - _width.x);
         pos.y = Mathf.Clamp(pos.y, min.y + _width.y, max.y - _width.y);
-        // Debug.Log("min :"+min + "max:" + max + "pos :" + pos + "幅:" + _width);
         return pos;
     }
 }

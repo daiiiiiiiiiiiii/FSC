@@ -6,6 +6,7 @@ public class Title : MonoBehaviour
     public Fade _fade;
     void Start()
     {
+        _fade.FadeOut(3f);
     }
 
     void Update()
