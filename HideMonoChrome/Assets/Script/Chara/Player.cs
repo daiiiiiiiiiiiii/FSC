@@ -6,7 +6,6 @@ enum State
     Idle,
     Run,
     Jump,
-    Dead,
     Max
 }
 
@@ -42,7 +41,7 @@ public class Player : MonoBehaviour
         this._rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _animFlagName = new String[]{
-            "_idle","_run","_jump","_dead"
+            "_idle","_run","_jump"
         };
         _animNum = _animFlagName.Length;
         transform.position = new Vector2(0.5f, 0.5f);
@@ -84,20 +83,18 @@ public class Player : MonoBehaviour
 
     void SetState()
     {
-        if (_state != State.Dead)
+
+        if (_dir == 0)
         {
-            if (_dir == 0)
-            {
-                _state = State.Idle;
-            }
-            else
-            {
-                _state = State.Run;
-            }
-            if (!_isGround)
-            {
-                _state = State.Jump;
-            }
+            _state = State.Idle;
+        }
+        else
+        {
+            _state = State.Run;
+        }
+        if (!_isGround)
+        {
+            _state = State.Jump;
         }
         SetAnimInfo((int)_state);
         // 画像の向きを変える

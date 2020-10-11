@@ -8,7 +8,6 @@ enum BlockType
     Black,
     White,
     Gray,
-    Warp,
     Max
 }
 
@@ -48,6 +47,8 @@ public class StageGrider : MonoBehaviour
     private GameObject _white;          // 白ブロック
     [SerializeField]
     private GameObject _gray;           // 灰ブロック
+    [SerializeField]
+    private GameObject[] _warp;         // ワープ
     Dictionary<BlockType, GameObject> 
         _blockTable;                    // ブロックテーブル
 
@@ -79,7 +80,6 @@ public class StageGrider : MonoBehaviour
         _blockTable.Add(BlockType.Black, _black);
         _blockTable.Add(BlockType.White, _white);
         _blockTable.Add(BlockType.Gray, _gray);
-        // _blockTable.Add(BlockType.Warp, _gray);
     }
 
     // 初期のブロック配置を決定
@@ -102,6 +102,12 @@ public class StageGrider : MonoBehaviour
             x = (int)UnityEngine.Random.Range(1, _cellnum.x);
             y = (int)UnityEngine.Random.Range(1, _cellnum.y);
             _blockType[x, y] = BlockType.Gray;
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            x = i * 10 + (int)UnityEngine.Random.Range(1, 5);
+            y = (int)UnityEngine.Random.Range(1, _cellnum.y);
+            _warp[i].transform.position = new Vector3(x + _offset, y + _offset);
         }
         _blockType[0, 0] = BlockType.Black;
     }
