@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using WaterRippleForScreens;
 
 enum State
 {
@@ -16,7 +17,6 @@ public class Player : MonoBehaviour
     Animator _animator;                 // アニメーション切り替え用変数
     String[] _animFlagName;             // アニメーションフラグの名前
     int _animNum;                       // アニメーションの種類
-    public GameObject _start;           // 開始地点
 
     /// <summary>
     /// 左右移動用変数
@@ -29,9 +29,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private bool _isJumpFlag = false;   // ジャンプしているかどうか
     private float _jumpHeight = 250f;   // ジャンプの高さ
-
     private bool _isGround = false;     // 地面にいるかどうか
-    private bool _dead = false;         // 死亡、リスポーンフラグ
 
     // 初期化
     void Start()
@@ -60,7 +58,6 @@ public class Player : MonoBehaviour
     {
         _dir = Input.GetAxisRaw("Horizontal");
         _isJumpFlag = Input.GetButtonDown("Jump");
-        _dead = Input.GetButtonDown("Resporn");
     }
 
     void Move()
@@ -125,15 +122,24 @@ public class Player : MonoBehaviour
     // 着地判定
     void OnTriggerEnter2D(Collider2D col)
     {
-        _isGround = true;
+        if (col.tag != "warp")
+        {
+            _isGround = true;
+        }
     }
     void OnTriggerStay2D(Collider2D col)
     {
-        _isGround = true;
+        if (col.tag != "warp")
+        {
+            _isGround = true;
+        }
     }
     // 空中判定
     private void OnTriggerExit2D(Collider2D col)
     {
-        _isGround = false;
+        if (col.tag != "warp")
+        {
+            _isGround = false;
+        }
     }
 }

@@ -433,7 +433,7 @@ MonoBehaviour:
   detectClick: 1
   waveCount: 10
   timeInfinity: 0
-  waveTime: 2
+  waveTime: 3
   waveAnimCurve:
     serializedVersion: 2
     m_Curve:
@@ -447,17 +447,17 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.219
-      value: 0.529
-      inSlope: -2.1942995
-      outSlope: -2.1942995
+      time: 0.3727266
+      value: 0.8673068
+      inSlope: -1.3602724
+      outSlope: -1.3602724
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: 0
+      time: 0.9916687
+      value: -0.0047073364
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -468,12 +468,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   waveInternalRadio: 0.4
-  waveExternalRadio: 0.07
-  waveScale: 6
-  waveSpeed: 0.34
-  waveFrequency: 2.6
-  circleXScale: 1
-  circleYScale: 1
+  waveExternalRadio: 1
+  waveScale: 5
+  waveSpeed: 1
+  waveFrequency: 1.5
+  circleXScale: 5
+  circleYScale: 5
 --- !u!1001 &737845428
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -541,6 +541,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: warp
       objectReference: {fileID: 0}
+    - target: {fileID: 4637565632140445679, guid: 6fc92d86aec0be74898769357084dd7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: warp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955787655648820027, guid: 6fc92d86aec0be74898769357084dd7c,
+        type: 3}
+      propertyPath: _warp
+      value: 
+      objectReference: {fileID: 1336116450}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6fc92d86aec0be74898769357084dd7c, type: 3}
 --- !u!1 &737845429 stripped
@@ -728,6 +738,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: warp
       objectReference: {fileID: 0}
+    - target: {fileID: 4637565632140445679, guid: 6fc92d86aec0be74898769357084dd7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: warp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955787655648820027, guid: 6fc92d86aec0be74898769357084dd7c,
+        type: 3}
+      propertyPath: _warp
+      value: 
+      objectReference: {fileID: 737845429}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6fc92d86aec0be74898769357084dd7c, type: 3}
 --- !u!1 &1336116450 stripped
@@ -809,7 +829,7 @@ GameObject:
   - component: {fileID: 1663093276}
   m_Layer: 12
   m_Name: keyman
-  m_TagString: Untagged
+  m_TagString: key
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
