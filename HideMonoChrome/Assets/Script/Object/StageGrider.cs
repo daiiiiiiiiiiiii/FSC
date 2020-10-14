@@ -163,16 +163,24 @@ public class StageGrider : MonoBehaviour
     private bool SetBlockPostion()
     {
         float time = Time.time;
-        for (int x = 0; x < _cellnum.x; x++)
+        //Vector3 pos = new Vector3(_offset,_offset);
+        //var obj = _blocks.transform.GetChild(0);
+        //obj.position = Vector3.Lerp(new Vector3(_offset, 15), pos, time);
+        bool flag = false;
+        for (int y = 0; y < _cellnum.y; y++)
         {
-            for (int y = 0; y < _cellnum.y; y++)
+            for (int x = 0; x < _cellnum.x; x++)
             {
-                Vector3 pos = new Vector3(x + _offset, y + _offset);
-                var obj = _blocks.transform.GetChild(x * y + x);
-                obj.position = Vector3.Lerp(new Vector3(x, 15), pos, time);
+                Vector3 pos = new Vector3(x + _offset, _offset + y);
+                var obj = _blocks.transform.GetChild(x * _cellnum.y + y);
+                obj.position = Vector3.Lerp(new Vector3(x + _offset, 15), pos, time / UnityEngine.Random.Range(1,5));
+                if(obj.position != pos)
+                {
+                    flag = true;
+                }
             }
         }
-        return true;
+        return flag;
     }
 
     private void SetBlocks()
