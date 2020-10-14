@@ -56,6 +56,9 @@ public class StageGrider : MonoBehaviour
     private GameObject _enemyParent;    // 敵キャラクターの親オブジェクト
     public Vector3 _keyPos{ get; set; } // キーの初期座標
 
+    // 初期演出判定
+    private bool _isFall = true;
+
     // キー関連
     private bool _isDecision;           // 決定を押したか
 
@@ -71,7 +74,7 @@ public class StageGrider : MonoBehaviour
         _player = GameObject.Find("player");
         gameObject.AddComponent<SortingGroup>().sortingLayerName = "object";
         InitBlocks();
-        SetImage();
+        SetInit();
     }
 
     private void CreateBlockTable()
@@ -108,8 +111,23 @@ public class StageGrider : MonoBehaviour
             x = i * 10 + (int)UnityEngine.Random.Range(1, 5);
             y = (int)UnityEngine.Random.Range(1, _cellnum.y);
             _warp[i].transform.position = new Vector3(x + _offset, y + _offset);
+            _blockType[x, y] = BlockType.Black;
         }
         _blockType[0, 0] = BlockType.Black;
+    }
+
+    void SetInit()
+    {
+        // 子オブジェクトの登録
+        for (int p = 0; p < _cellnum.x; p++)
+        {
+            for (int i = 0; i < _cellnum.y; i++)
+            {
+                Vector3 pos = new Vector3(p + _offset, 15);
+                GameObject obj = (GameObject)Instantiate(_blockTable[_blockType[p, i]], pos, Quaternion.identity);
+                obj.transform.parent = _blocks.transform;
+            }
+        }
     }
 
     void SetImage()
@@ -128,12 +146,33 @@ public class StageGrider : MonoBehaviour
 
     private void Update()
     {
-        KeyInputAction();
-        DrawGridLine();
-        if (_isDecision)
+        if (_isFall)
         {
-            SetBlocks();
+            _isFall = SetBlockPostion();
         }
+        else
+        {           
+            KeyInputAction();
+            if (_isDecision)
+            {
+                SetBlocks();
+            }
+        }
+    }
+
+    private bool SetBlockPostion()
+    {
+        float time = Time.time;
+        for (int x = 0; x < _cellnum.x; x++)
+        {
+            for (int y = 0; y < _cellnum.y; y++)
+            {
+                Vector3 pos = new Vector3(x + _offset, y + _offset);
+                var obj = _blocks.transform.GetChild(x * y + x);
+                obj.position = Vector3.Lerp(new Vector3(x, 15), pos, time);
+            }
+        }
+        return true;
     }
 
     private void SetBlocks()
@@ -166,6 +205,11 @@ public class StageGrider : MonoBehaviour
                 }
             }
         }
+        for (int i = 0; i < 2; i++)
+        {
+            Array ar = new Array((int)_warp[i].transform.position.x, (int)_warp[i].transform.position.y);
+            _blockType[ar.x, ar.y] = BlockType.Black;
+        }
         SetImage();
     }
 
@@ -178,19 +222,5 @@ public class StageGrider : MonoBehaviour
     {
         Vector2Int pos = new Vector2Int((int)chara.transform.position.x, (int)chara.transform.position.y);
         return pos;
-    }
-
-    void DrawGridLine()
-    {
-        // 横のライン
-        for(int y = 0;y <= _array.y; y++)
-        {
-            Debug.DrawLine(new Vector3(0, y), new Vector3(_cellnum.x, y));
-        }
-        // 縦のライン
-        for (int x = 0; x <= _array.x; x++)
-        {
-            Debug.DrawLine(new Vector3(x,0), new Vector3(x,_cellnum.y));
-        }
     }
 }

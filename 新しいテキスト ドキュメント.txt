@@ -3,3 +3,6 @@
 
 titleBGM
 https://dova-s.jp/bgm/play9513.html
+
+GameBGM/電脳漂流記
+https://musmus.main.jp/

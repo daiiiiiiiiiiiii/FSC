@@ -55,13 +55,6 @@ class KeyAction : MonoBehaviour, IEnemy
         }
     }
 
-    void Move()
-    {
-        var diff = Time.timeSinceLevelLoad - _startTime;
-        transform.position = Vector3.Lerp(transform.position, (Vector2)transform.position + _speed[(int)_dir], diff);
-        Debug.Log(_dir);
-    }
-
     bool AbleWalk(int num)
     {
         var pos = (Vector2)transform.position + (_speed[num] * 0.25f);
@@ -80,5 +73,12 @@ class KeyAction : MonoBehaviour, IEnemy
     public EnemyType GetEnemyType()
     {
         return EnemyType.Key;
+    }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.tag== "Player")
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }
