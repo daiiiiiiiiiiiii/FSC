@@ -8,7 +8,8 @@ class KeyAction : MonoBehaviour, IEnemy
     int _mask;
     Vector2 _dirPos;
     RaycastHit2D _ray;
-    float _startTime;
+    [SerializeField]
+    private AudioClip _sound;   // 鍵ゲット音
     void Start()
     {
         _dir = MoveType.Stop;
@@ -45,7 +46,6 @@ class KeyAction : MonoBehaviour, IEnemy
                 _dir = MoveType.Stop;
                 _time = 0.5f;
             }
-            _startTime = Time.timeSinceLevelLoad;
         }
         _time -= Time.deltaTime;
         _dirPos = (Vector2)transform.position + _speed[(int)_dir] * 0.25f;
@@ -78,7 +78,8 @@ class KeyAction : MonoBehaviour, IEnemy
     {
         if(col.tag== "Player")
         {
-            this.gameObject.SetActive(false);
+            GetComponent<AudioSource>().PlayOneShot(_sound);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 }

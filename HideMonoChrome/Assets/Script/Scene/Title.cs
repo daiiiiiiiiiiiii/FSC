@@ -61,7 +61,7 @@ public class Title : MonoBehaviour
 
     private bool FadeIn()
     {
-        _alpha -= 0.003f;
+        _alpha -= 0.01f;
         _color.a = _alpha;
         _sprite.material.color = _color;
         if (_alpha > _lim)
@@ -75,7 +75,7 @@ public class Title : MonoBehaviour
 
     private bool FadeOut()
     {
-        _alpha += 0.003f;
+        _alpha += 0.01f;
         _color.a = _alpha;
         _sprite.material.color = _color;
         if (_alpha < 1f)

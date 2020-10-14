@@ -51,6 +51,9 @@ public class StageGrider : MonoBehaviour
     private GameObject[] _warp;         // ワープ
     Dictionary<BlockType, GameObject> 
         _blockTable;                    // ブロックテーブル
+    [SerializeField]
+    private AudioClip[] _sound;         // ブロック切り替え用サウンド
+    private bool _switch = false;       // サウンド判断用フラグ
 
     private GameObject _player;         // プレイヤーの情報
     private GameObject _enemyParent;    // 敵キャラクターの親オブジェクト
@@ -58,6 +61,7 @@ public class StageGrider : MonoBehaviour
 
     // 初期演出判定
     private bool _isFall = true;
+    private float _time = 0;
 
     // キー関連
     private bool _isDecision;           // 決定を押したか
@@ -102,8 +106,8 @@ public class StageGrider : MonoBehaviour
         _enemyParent.transform.GetChild(0).transform.position = _keyPos;
         for (int i = 0; i < 10; i++)
         {
-            x = (int)UnityEngine.Random.Range(1, _cellnum.x);
-            y = (int)UnityEngine.Random.Range(1, _cellnum.y);
+            x = (int)UnityEngine.Random.Range(1, _cellnum.x - 1);
+            y = (int)UnityEngine.Random.Range(1, _cellnum.y - 1);
             _blockType[x, y] = BlockType.Gray;
         }
         for (int i = 0; i < 2; i++)
@@ -146,15 +150,27 @@ public class StageGrider : MonoBehaviour
 
     private void Update()
     {
+
         if (_isFall)
         {
+            Time.timeScale = 1f;
             _isFall = SetBlockPostion();
+            if (_isFall)
+            {
+                Time.timeScale = 0;
+            }
         }
         else
-        {           
+        {
             KeyInputAction();
             if (_isDecision)
             {
+                int num = 0;
+                if (_switch)
+                {
+                    num = 1;
+                }
+                GetComponent<AudioSource>().PlayOneShot(_sound[num]);
                 SetBlocks();
             }
         }
@@ -162,10 +178,7 @@ public class StageGrider : MonoBehaviour
 
     private bool SetBlockPostion()
     {
-        float time = Time.time;
-        //Vector3 pos = new Vector3(_offset,_offset);
-        //var obj = _blocks.transform.GetChild(0);
-        //obj.position = Vector3.Lerp(new Vector3(_offset, 15), pos, time);
+        _time++;       
         bool flag = false;
         for (int y = 0; y < _cellnum.y; y++)
         {
@@ -173,7 +186,7 @@ public class StageGrider : MonoBehaviour
             {
                 Vector3 pos = new Vector3(x + _offset, _offset + y);
                 var obj = _blocks.transform.GetChild(x * _cellnum.y + y);
-                obj.position = Vector3.Lerp(new Vector3(x + _offset, 15), pos, time / UnityEngine.Random.Range(1,5));
+                obj.position = Vector3.Lerp(new Vector3(x + _offset, 15), pos, _time / 200);
                 if(obj.position != pos)
                 {
                     flag = true;

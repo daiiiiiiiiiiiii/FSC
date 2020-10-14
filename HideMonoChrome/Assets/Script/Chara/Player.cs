@@ -119,14 +119,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 着地判定
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.tag != "warp")
-        {
-            _isGround = true;
-        }
-    }
     void OnTriggerStay2D(Collider2D col)
     {
         if (col.tag != "warp")
