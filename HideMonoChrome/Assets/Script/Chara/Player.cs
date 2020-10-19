@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
         }
     }
     // 空中判定
-    private void OnTriggerExit2D(Collider2D col)
+    void OnTriggerExit2D(Collider2D col)
     {
         if (col.tag != "warp")
         {

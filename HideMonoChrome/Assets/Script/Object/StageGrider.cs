@@ -36,35 +36,36 @@ public class Array
 public class StageGrider : MonoBehaviour
 {
     [SerializeField]
-    private Vector2Int _cellnum;         // 升目の数
+    private Vector2Int _cellnum;            // 升目の数
     float _offset = 0.5f;
-    private Array _array;               // ステージの縦横サイズ
-    private BlockType[,] _blockType;    // ブロックの種類
-    private GameObject _blocks;         // 全ブロックの親オブジェクト
+    private Array _array;                   // ステージの縦横サイズ
+    private BlockType[,] _blockType;        // ブロックの種類
+    private GameObject _blocks;             // 全ブロックの親オブジェクト
     [SerializeField]
-    private GameObject _black;          // 黒ブロック
+    private GameObject _black;              // 黒ブロック
     [SerializeField]
-    private GameObject _white;          // 白ブロック
+    private GameObject _white;              // 白ブロック
     [SerializeField]
-    private GameObject _gray;           // 灰ブロック
+    private GameObject _gray;               // 灰ブロック
     [SerializeField]
-    private GameObject[] _warp;         // ワープ
+    private GameObject[] _warp;             // ワープ
     Dictionary<BlockType, GameObject> 
-        _blockTable;                    // ブロックテーブル
+        _blockTable;                        // ブロックテーブル
     [SerializeField]
-    private AudioClip[] _sound;         // ブロック切り替え用サウンド
-    private bool _switch = false;       // サウンド判断用フラグ
+    private AudioClip[] _sound;             // ブロック切り替え用サウンド
+    private bool _switch = false;           // サウンド判断用フラグ
 
-    private GameObject _player;         // プレイヤーの情報
-    private GameObject _enemyParent;    // 敵キャラクターの親オブジェクト
-    public Vector3 _keyPos{ get; set; } // キーの初期座標
+    private GameObject _player;             // プレイヤーの情報
+    private GameObject _enemyParent;        // 敵キャラクターの親オブジェクト
+    public Vector3 _keyPos{ get; set; }     // キーの初期座標
+    public Vector3 _goalPos { get; set; }   // キーの初期座標
 
     // 初期演出判定
-    private bool _isFall = true;
-    private float _time = 0;
+    private bool _isFall = true;            // ブロック落下中
+    private float _time = 0;                // 落下時間
 
     // キー関連
-    private bool _isDecision;           // 決定を押したか
+    private bool _isDecision;               // 決定を押したか
 
     void Start()
     {
@@ -117,6 +118,9 @@ public class StageGrider : MonoBehaviour
             _warp[i].transform.position = new Vector3(x + _offset, y + _offset);
             _blockType[x, y] = BlockType.Black;
         }
+        _goalPos = new Vector3(_cellnum.x - 1 + _offset, _cellnum.y - 1 + _offset);
+        _enemyParent.transform.GetChild(1).transform.position = _goalPos;
+        _blockType[_cellnum.x - 1, _cellnum.y - 1] = BlockType.Black;
         _blockType[0, 0] = BlockType.Black;
     }
 
@@ -209,7 +213,8 @@ public class StageGrider : MonoBehaviour
             for (int i = 0; i < _cellnum.y; i++)
             {
                 if (!((p == pos.x && i == pos.y)
-                 || (p == key.x && i == key.y)))
+                 || (p == key.x && i == key.y)
+                 || (p == _goalPos.x && i == _goalPos.y)))
                 {
                     if(tmp[p,i] == BlockType.Black)
                     {
@@ -225,6 +230,7 @@ public class StageGrider : MonoBehaviour
                     }
                 }
             }
+            _blockType[(int)_goalPos.x, (int)_goalPos.y] = BlockType.Black;
         }
         for (int i = 0; i < 2; i++)
         {

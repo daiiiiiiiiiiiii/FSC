@@ -10,6 +10,8 @@ class KeyAction : MonoBehaviour, IEnemy
     RaycastHit2D _ray;
     [SerializeField]
     private AudioClip _sound;   // 鍵ゲット音
+    [SerializeField]
+    private GameObject _goal;    // ゴールオブジェクト
     void Start()
     {
         _dir = MoveType.Stop;
@@ -80,6 +82,7 @@ class KeyAction : MonoBehaviour, IEnemy
         {
             GetComponent<AudioSource>().PlayOneShot(_sound);
             this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            _goal.SetActive(true);
         }
     }
 }

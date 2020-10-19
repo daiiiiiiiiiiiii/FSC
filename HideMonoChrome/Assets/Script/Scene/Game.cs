@@ -1,38 +1,27 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering.PostProcessing;
 
-public class Title : MonoBehaviour
+public class Game : MonoBehaviour
 {
     [SerializeField]
-    Button[] _btn;
-    AudioSource _audio;             // 音を鳴らす為のインターフェース
+    private GameObject _time;       // 時間のテキスト
     [SerializeField]
-    private AudioClip _sound;       // 効果音
-
+    private GameObject _goal;
+    Goal _finish;
     private SpriteRenderer _sprite; // フェード用の画像
     float _lim = 0.25f;
     float _alpha = 1f;
     Color _color;
-
-    Vignette _vig;
-    PostProcessProfile _prof;
-    string[] _scene;
-
+    float _starttime = 0;
     IEnumerator Start()
     {
-        _scene = new string[2]
-        {
-            "Stage1",
-            "Stage1"
-        };
-        _audio = GetComponent<AudioSource>();
+        _starttime = Time.time;
         _sprite = GetComponent<SpriteRenderer>();
-        _prof = GetComponent<PostProcessVolume>().profile;
         _color = _sprite.material.color;
-        _vig = _prof.GetSetting<Vignette>();
+        _finish = _goal.GetComponent<Goal>();
         while (FadeIn())
         {
             yield return null;
@@ -41,27 +30,32 @@ public class Title : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown("Jump"))
+        var text = _time.GetComponent<Text>();
+        var t = Time.time;
+        t -= _starttime;
+        int m = (int)t / 60;
+        int s = (int)t % 60;
+        if (s < 10)
         {
-            _audio.PlayOneShot(_sound);
-            StartCoroutine("OnButtonClick", 0);
+            text.text = "Time : " + m + " : 0" + s;
+        }
+        else
+        {
+            text.text = "Time : " + m + " : " + s;
+        }
+        if (_finish.GetGoal())
+        {
+            StartCoroutine("GoalFade");
         }
     }
 
-    public void OnButton(int i)
+    public IEnumerator GoalFade()
     {
-        _audio.PlayOneShot(_sound);
-        _btn[i].interactable = false;
-        StartCoroutine("OnButtonClick", i);
-    }
-
-    public IEnumerator OnButtonClick(int i)
-    {      
         while (FadeOut())
         {
             yield return null;
         }
-        SceneManager.LoadScene(_scene[i]);
+        SceneManager.LoadScene("Title");
     }
 
     private bool FadeIn()
@@ -71,7 +65,6 @@ public class Title : MonoBehaviour
         _sprite.material.color = _color;
         if (_alpha > _lim)
         {
-            _vig.intensity.Override(_alpha);
             return true;
         }
         StopCoroutine("FadeIn");
